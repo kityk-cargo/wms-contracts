@@ -101,11 +101,11 @@
   ],
   "metadata": {
     "pact-js": {
-      "version": "12.5.2"
+      "version": "15.0.1"
     },
     "pactRust": {
-      "ffi": "0.4.20",
-      "models": "1.2.0"
+      "ffi": "0.4.22",
+      "models": "1.2.3"
     },
     "pactSpecification": {
       "version": "2.0.0"
