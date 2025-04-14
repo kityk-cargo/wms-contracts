@@ -4,6 +4,28 @@
   },
   "interactions": [
     {
+      "description": "a request during server errors",
+      "providerState": "server is experiencing issues",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/orders"
+      },
+      "response": {
+        "body": {
+          "error": "Internal server error"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body.error": {
+            "match": "type"
+          }
+        },
+        "status": 500
+      }
+    },
+    {
       "description": "a request for all orders with matchers",
       "providerState": "orders exist",
       "request": {
@@ -25,7 +47,6 @@
               }
             ],
             "orderDate": "2015-08-06T16:53:10+01:00",
-            "orderReference": "ORD-2023-001",
             "status": "Pending",
             "totalAmount": 99.99,
             "updatedAt": "2015-08-06T16:53:10+01:00"
@@ -43,7 +64,6 @@
               }
             ],
             "orderDate": "2015-08-06T16:53:10+01:00",
-            "orderReference": "ORD-2023-001",
             "status": "Pending",
             "totalAmount": 99.99,
             "updatedAt": "2015-08-06T16:53:10+01:00"
@@ -86,9 +106,6 @@
           "$.body[*].orderDate": {
             "match": "regex",
             "regex": "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$"
-          },
-          "$.body[*].orderReference": {
-            "match": "type"
           },
           "$.body[*].status": {
             "match": "regex",
@@ -148,7 +165,6 @@
             }
           ],
           "orderDate": "2015-08-06T16:53:10+01:00",
-          "orderReference": "ORD-2023-001",
           "status": "Pending",
           "totalAmount": 99.99,
           "updatedAt": "2015-08-06T16:53:10+01:00"
@@ -186,9 +202,6 @@
           "$.body.orderDate": {
             "match": "regex",
             "regex": "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$"
-          },
-          "$.body.orderReference": {
-            "match": "type"
           },
           "$.body.status": {
             "match": "regex",
@@ -242,7 +255,6 @@
             }
           ],
           "orderDate": "2015-08-06T16:53:10+01:00",
-          "orderReference": "ORD-2023-001",
           "status": "Pending",
           "totalAmount": 99.99,
           "updatedAt": "2015-08-06T16:53:10+01:00"
@@ -281,9 +293,6 @@
             "match": "regex",
             "regex": "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$"
           },
-          "$.body.orderReference": {
-            "match": "type"
-          },
           "$.body.status": {
             "match": "regex",
             "regex": "Pending|Allocated|Processing|Shipped|Delivered|Cancelled"
@@ -297,6 +306,89 @@
           }
         },
         "status": 201
+      }
+    },
+    {
+      "description": "a request to create an invalid order",
+      "providerState": "order validation will fail",
+      "request": {
+        "body": {
+          "customerId": 0,
+          "items": []
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "method": "POST",
+        "path": "/api/v1/orders"
+      },
+      "response": {
+        "body": {
+          "details": [
+            {
+              "field": "customerId",
+              "message": "Must be a positive integer"
+            }
+          ],
+          "error": "Validation error"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body.details": {
+            "match": "type",
+            "min": 1
+          },
+          "$.body.details[*].field": {
+            "match": "type"
+          },
+          "$.body.details[*].message": {
+            "match": "type"
+          },
+          "$.body.error": {
+            "match": "type"
+          }
+        },
+        "status": 400
+      }
+    },
+    {
+      "description": "a request to create an order with non-existent product",
+      "providerState": "product with ID 9999 does not exist",
+      "request": {
+        "body": {
+          "customerId": 1,
+          "items": [
+            {
+              "productId": 9999,
+              "quantity": 1
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "method": "POST",
+        "path": "/api/v1/orders"
+      },
+      "response": {
+        "body": {
+          "error": "Product not found",
+          "productId": 9999
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body.error": {
+            "match": "type"
+          },
+          "$.body.productId": {
+            "match": "type"
+          }
+        },
+        "status": 404
       }
     },
     {
@@ -351,7 +443,6 @@
             }
           ],
           "orderDate": "2015-08-06T16:53:10+01:00",
-          "orderReference": "ORD-2023-001",
           "status": "Processing",
           "totalAmount": 99.99,
           "updatedAt": "2015-08-06T16:53:10+01:00"
@@ -389,9 +480,6 @@
           "$.body.orderDate": {
             "match": "regex",
             "regex": "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$"
-          },
-          "$.body.orderReference": {
-            "match": "type"
           },
           "$.body.status": {
             "match": "regex",
