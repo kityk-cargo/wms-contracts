@@ -324,26 +324,20 @@
       },
       "response": {
         "body": {
-          "details": [
-            {
-              "field": "customerId",
-              "message": "Must be a positive integer"
-            }
-          ],
+          "details": {
+            "customerId": "Customer ID must be greater than 0",
+            "items": "Order must contain at least one item"
+          },
           "error": "Validation error"
         },
         "headers": {
           "Content-Type": "application/json"
         },
         "matchingRules": {
-          "$.body.details": {
-            "match": "type",
-            "min": 1
-          },
-          "$.body.details[*].field": {
+          "$.body.details.customerId": {
             "match": "type"
           },
-          "$.body.details[*].message": {
+          "$.body.details.items": {
             "match": "type"
           },
           "$.body.error": {
@@ -374,8 +368,7 @@
       },
       "response": {
         "body": {
-          "error": "Product not found",
-          "productId": 9999
+          "error": "Product not found"
         },
         "headers": {
           "Content-Type": "application/json"
@@ -383,12 +376,9 @@
         "matchingRules": {
           "$.body.error": {
             "match": "type"
-          },
-          "$.body.productId": {
-            "match": "type"
           }
         },
-        "status": 404
+        "status": 400
       }
     },
     {
