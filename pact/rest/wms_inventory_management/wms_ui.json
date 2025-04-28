@@ -4,6 +4,37 @@
   },
   "interactions": [
     {
+      "description": "a request during server issues",
+      "providerState": "product service is experiencing issues",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/products/1"
+      },
+      "response": {
+        "body": {
+          "criticality": "critical",
+          "detail": "Internal server error",
+          "id": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body.criticality": {
+            "match": "type"
+          },
+          "$.body.detail": {
+            "match": "type"
+          },
+          "$.body.id": {
+            "match": "regex",
+            "regex": "^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+          }
+        },
+        "status": 500
+      }
+    },
+    {
       "description": "a request for all products",
       "providerState": "products exist",
       "request": {
@@ -107,14 +138,23 @@
       },
       "response": {
         "body": {
-          "error": "Product not found"
+          "criticality": "critical",
+          "detail": "Product not found",
+          "id": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
         },
         "headers": {
           "Content-Type": "application/json"
         },
         "matchingRules": {
-          "$.body.error": {
+          "$.body.criticality": {
             "match": "type"
+          },
+          "$.body.detail": {
+            "match": "type"
+          },
+          "$.body.id": {
+            "match": "regex",
+            "regex": "^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
           }
         },
         "status": 404
