@@ -4,38 +4,7 @@
   },
   "interactions": [
     {
-      "description": "a request during server errors",
-      "providerState": "server is experiencing issues",
-      "request": {
-        "method": "GET",
-        "path": "/api/v1/orders"
-      },
-      "response": {
-        "body": {
-          "criticality": "critical",
-          "detail": "Internal server error",
-          "id": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
-        },
-        "headers": {
-          "Content-Type": "application/json"
-        },
-        "matchingRules": {
-          "$.body.criticality": {
-            "match": "type"
-          },
-          "$.body.detail": {
-            "match": "type"
-          },
-          "$.body.id": {
-            "match": "regex",
-            "regex": "^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
-          }
-        },
-        "status": 500
-      }
-    },
-    {
-      "description": "a request for all orders with matchers",
+      "description": "a request for all orders",
       "providerState": "orders exist",
       "request": {
         "method": "GET",
@@ -234,6 +203,37 @@
           }
         },
         "status": 200
+      }
+    },
+    {
+      "description": "a request for orders during server errors",
+      "providerState": "server is experiencing issues",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/orders"
+      },
+      "response": {
+        "body": {
+          "criticality": "critical",
+          "detail": "Internal server error",
+          "id": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body.criticality": {
+            "match": "type"
+          },
+          "$.body.detail": {
+            "match": "type"
+          },
+          "$.body.id": {
+            "match": "regex",
+            "regex": "^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+          }
+        },
+        "status": 500
       }
     },
     {
