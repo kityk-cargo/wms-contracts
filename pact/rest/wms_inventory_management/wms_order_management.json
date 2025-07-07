@@ -4,6 +4,53 @@
   },
   "interactions": [
     {
+      "description": "a request to lock more stock than available",
+      "providerStates": [
+        {
+          "name": "insufficient stock exists for product 1"
+        }
+      ],
+      "request": {
+        "body": {
+          "items": [
+            {
+              "productId": 1,
+              "quantity": 100
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "method": "POST",
+        "path": "/api/v1/stock/lock"
+      },
+      "response": {
+        "body": {
+          "criticality": "critical",
+          "detail": "Insufficient stock for product 1. Requested: 100, Available: 10",
+          "id": "550e8400-e29b-41d4-a716-446655440000"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                }
+              ]
+            }
+          }
+        },
+        "status": 422
+      }
+    },
+    {
       "description": "a request for an existing product",
       "providerStates": [
         {
@@ -129,6 +176,43 @@
           }
         },
         "status": 404
+      }
+    },
+    {
+      "description": "a request to lock stock for multiple products",
+      "providerStates": [
+        {
+          "name": "sufficient stock exists for products 1 and 2"
+        }
+      ],
+      "request": {
+        "body": {
+          "items": [
+            {
+              "productId": 1,
+              "quantity": 5
+            },
+            {
+              "productId": 2,
+              "quantity": 3
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "method": "POST",
+        "path": "/api/v1/stock/lock"
+      },
+      "response": {
+        "body": {
+          "message": "Stock locked successfully",
+          "success": true
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status": 200
       }
     }
   ],
